@@ -1,0 +1,110 @@
+import { useState, useEffect } from 'react';
+
+export default function ExerciseForm({ onAddExercise, initialExercise = null, onCancel }) {
+    const [name, setName] = useState('');
+    const [sets, setSets] = useState([
+        { reps: '', weight: '' },
+        { reps: '', weight: '' },
+        { reps: '', weight: '' }
+    ]);
+
+    useEffect(() => {
+        if (initialExercise) {
+            setName(initialExercise.name);
+            // Keep sets empty for the new log unless we want to copy previous? 
+            // User requirement: "reuse that". Usually means the list of exercises.
+            // We start fresh with empty sets for today's workout.
+        }
+    }, [initialExercise]);
+
+    const handleSetChange = (index, field, value) => {
+        const newSets = [...sets];
+        newSets[index][field] = value;
+        setSets(newSets);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!name) return;
+
+        onAddExercise({
+            ...initialExercise, // Keep ID if editing a planned one
+            id: initialExercise?.id || crypto.randomUUID(),
+            name,
+            sets,
+            isCompleted: true
+        });
+
+        // Reset only if not editing a specific planned one (because that closes the form usually)
+        if (!initialExercise) {
+            setName('');
+            setSets([
+                { reps: '', weight: '' },
+                { reps: '', weight: '' },
+                { reps: '', weight: '' }
+            ]);
+        }
+    };
+
+    return (
+        <div className="glass-panel fade-in" style={{ padding: '2rem', marginBottom: '2rem', border: '1px solid var(--primary-color)' }}>
+            <h3 style={{ marginBottom: '1rem', color: 'var(--text-secondary)' }}>
+                {initialExercise ? 'Log Planned Exercise' : 'Add New Exercise'}
+            </h3>
+            <form onSubmit={handleSubmit}>
+                <div style={{ marginBottom: '1.5rem' }}>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Exercise Name</label>
+                    <input
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="e.g. Incline Bench Press"
+                        required
+                        style={{ width: '100%' }}
+                        autoFocus
+                    />
+                </div>
+
+                <div style={{ display: 'grid', gap: '1rem' }}>
+                    {sets.map((set, i) => (
+                        <div key={i} style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                            <span style={{ color: 'var(--text-secondary)', width: '50px', fontWeight: '600' }}>Set {i + 1}</span>
+                            <div style={{ flex: 1 }}>
+                                <input
+                                    type="number"
+                                    placeholder="Reps"
+                                    value={set.reps}
+                                    onChange={(e) => handleSetChange(i, 'reps', e.target.value)}
+                                    style={{ padding: '0.5rem' }}
+                                />
+                            </div>
+                            <div style={{ flex: 1 }}>
+                                <input
+                                    type="number"
+                                    placeholder="Weight (kg)"
+                                    value={set.weight}
+                                    onChange={(e) => handleSetChange(i, 'weight', e.target.value)}
+                                    style={{ padding: '0.5rem' }}
+                                />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
+                    <button type="submit" className="btn-primary" style={{ flex: 1 }}>
+                        Save Log
+                    </button>
+                    {onCancel && (
+                        <button
+                            type="button"
+                            onClick={onCancel}
+                            style={{ background: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '0 1rem' }}
+                        >
+                            Cancel
+                        </button>
+                    )}
+                </div>
+            </form>
+        </div>
+    );
+}
