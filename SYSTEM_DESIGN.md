@@ -70,15 +70,15 @@ sequenceDiagram
 How data moves when a user logs a workout.
 
 ```mermaid
-graph LR
+flowchart LR
     User[User Action] -->|Input| Form[Exercise Form]
     Form -->|Submit| State[Update React State]
     State -->|Effect| LS[Save to LocalStorage]
     
-    LS -->|Trigger| Sync[Sync Handler]
+    LS -->|Trigger| Sync{Sync Handler}
     
-    Sync -- Online? --> Cloud[Save to Firestore]
-    Sync -- Offline? --> Queue[Skip (Wait for next load)]
+    Sync -->|Online| Cloud[Save to Firestore]
+    Sync -->|Offline| Queue[Skip - Wait for next load]
 ```
 
 **Conflict Resolution Strategy:**
