@@ -95,8 +95,8 @@ flowchart LR
     Dev[Developer] -->|Git Push| GitHub[GitHub Repository]
     
     subgraph "GitHub Actions"
-        Build[Build Step (npm run build)]
-        Test[Lint & Validation]
+        Build["Build Step: npm run build"]
+        Test["Lint & Validation"]
     end
     
     GitHub --> Build
