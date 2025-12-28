@@ -11,9 +11,9 @@ export default function ExerciseForm({ onAddExercise, initialExercise = null, on
     useEffect(() => {
         if (initialExercise) {
             setName(initialExercise.name);
-            // Keep sets empty for the new log unless we want to copy previous? 
-            // User requirement: "reuse that". Usually means the list of exercises.
-            // We start fresh with empty sets for today's workout.
+            if (initialExercise.sets && initialExercise.sets.length > 0) {
+                setSets(initialExercise.sets);
+            }
         }
     }, [initialExercise]);
 

@@ -5,6 +5,7 @@ const LOCAL_SESSIONS_KEY = 'gym_tracker_sessions';
 const LOCAL_TEMPLATES_KEY = 'gym_tracker_templates';
 
 // --- Helper for Syncing ---
+// --- Helper for Syncing ---
 export const fetchUserData = async (userId) => {
   try {
     const docRef = doc(db, "users", userId);
@@ -12,10 +13,40 @@ export const fetchUserData = async (userId) => {
 
     if (docSnap.exists()) {
       const data = docSnap.data();
-      // Sync to local for speed/offline capability (simple strategy: cloud wins)
-      if (data.sessions) localStorage.setItem(LOCAL_SESSIONS_KEY, JSON.stringify(data.sessions));
-      if (data.templates) localStorage.setItem(LOCAL_TEMPLATES_KEY, JSON.stringify(data.templates));
-      return data;
+      const cloudSessions = data.sessions || [];
+      const cloudTemplates = data.templates || [];
+
+      // Merge strategy: Cloud is source of truth, but we keep local-only items (unsynced work)
+      const localSessions = getSessions();
+      const localTemplates = getTemplates();
+
+      const cloudSessionIds = new Set(cloudSessions.map(s => s.id));
+      const cloudTemplateIds = new Set(cloudTemplates.map(t => t.id));
+
+      const mergedSessions = [...cloudSessions];
+      localSessions.forEach(s => {
+        if (!cloudSessionIds.has(s.id)) {
+          mergedSessions.push(s);
+        }
+      });
+
+      const mergedTemplates = [...cloudTemplates];
+      localTemplates.forEach(t => {
+        if (!cloudTemplateIds.has(t.id)) {
+          mergedTemplates.push(t);
+        }
+      });
+
+      // Update Local Storage with merged data
+      localStorage.setItem(LOCAL_SESSIONS_KEY, JSON.stringify(mergedSessions));
+      localStorage.setItem(LOCAL_TEMPLATES_KEY, JSON.stringify(mergedTemplates));
+
+      // If we found local items that weren't in cloud, sync back to cloud
+      if (mergedSessions.length > cloudSessions.length || mergedTemplates.length > cloudTemplates.length) {
+        saveUserData(userId, mergedSessions, mergedTemplates);
+      }
+
+      return { sessions: mergedSessions, templates: mergedTemplates };
     }
   } catch (e) {
     console.error("Error fetching cloud data", e);
