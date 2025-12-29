@@ -4,6 +4,7 @@ import ExerciseForm from './components/ExerciseForm';
 import SessionHistory from './components/SessionHistory';
 import WorkoutCategories from './components/WorkoutCategories';
 import HealthTracking from './components/HealthTracking';
+import WorkoutStreak from './components/WorkoutStreak';
 import {
   getSessions, saveSession, createSession, deleteSession,
   getTemplates, saveTemplate, deleteTemplate,
@@ -152,6 +153,7 @@ function App() {
       </div>
 
       <Header />
+      <WorkoutStreak sessions={sessions} />
       <main style={{ maxWidth: '800px', margin: '0 auto' }}>
 
         {!currentSession ? (
