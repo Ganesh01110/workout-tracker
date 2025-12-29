@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import ExerciseForm from './components/ExerciseForm';
 import SessionHistory from './components/SessionHistory';
+import WorkoutCategories from './components/WorkoutCategories';
+import HealthTracking from './components/HealthTracking';
 import {
-  getSessions, saveSession, createSession,
+  getSessions, saveSession, createSession, deleteSession,
   getTemplates, saveTemplate, deleteTemplate,
   fetchUserData
 } from './utils/storage';
@@ -115,6 +117,19 @@ function App() {
     const updatedSessions = saveSession(updatedSession, user?.uid);
     setSessions(updatedSessions);
     setCurrentSession(updatedSession);
+  };
+
+  const handleDeleteSession = (id) => {
+    if (confirm("Delete this workout session from history?")) {
+      const updatedSessions = deleteSession(id, user?.uid);
+      setSessions(updatedSessions);
+      if (currentSession?.id === id) setCurrentSession(null);
+    }
+  };
+
+  const handleEditSession = (session) => {
+    setCurrentSession(session);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -295,7 +310,17 @@ function App() {
           </div>
         )}
 
-        <SessionHistory sessions={sessions.filter(s => s.id !== currentSession?.id)} />
+        <SessionHistory
+          sessions={sessions.filter(s => s.id !== currentSession?.id)}
+          onDeleteSession={handleDeleteSession}
+          onEditSession={handleEditSession}
+        />
+
+
+
+        <HealthTracking user={user} />
+
+        <WorkoutCategories />
 
       </main>
     </div>
