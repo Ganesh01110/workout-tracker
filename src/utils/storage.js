@@ -167,3 +167,45 @@ export const deleteTemplate = (id, userId = null) => {
 
   return newTemplates;
 };
+
+/**
+ * Finds the max weight/reps for each set index (0, 1, 2) for a given exercise name.
+ * returns an array like [{reps: 10, weight: 60}, {reps: 8, weight: 65}, {reps: 6, weight: 70}]
+ */
+export const getExercisePRs = (exerciseName) => {
+  const sessions = getSessions();
+  const prs = [
+    { reps: '', weight: '' },
+    { reps: '', weight: '' },
+    { reps: '', weight: '' }
+  ];
+
+  if (!exerciseName) return prs;
+
+  sessions.forEach(session => {
+    session.exercises.forEach(ex => {
+      if (ex.name.toLowerCase() === exerciseName.toLowerCase() && ex.isCompleted) {
+        ex.sets.forEach((set, i) => {
+          if (i < 3 && set.weight) {
+            const currentWeight = parseFloat(set.weight);
+            const bestWeight = prs[i].weight ? parseFloat(prs[i].weight) : 0;
+
+            if (currentWeight > bestWeight) {
+              prs[i].weight = set.weight;
+              prs[i].reps = set.reps;
+            } else if (currentWeight === bestWeight) {
+              // If same weight, take the one with more reps
+              const currentReps = parseFloat(set.reps) || 0;
+              const bestReps = prs[i].reps ? parseFloat(prs[i].reps) : 0;
+              if (currentReps > bestReps) {
+                prs[i].reps = set.reps;
+              }
+            }
+          }
+        });
+      }
+    });
+  });
+
+  return prs;
+};
