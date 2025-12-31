@@ -142,15 +142,15 @@ export default function WorkoutStreak({ sessions }) {
                             {/* Month labels */}
                             <div style={{
                                 display: 'flex',
-                                marginBottom: '0.5rem',
-                                paddingLeft: '30px',
+                                marginBottom: '1rem',
+                                paddingLeft: '90px',
                                 fontSize: '0.7rem',
                                 color: 'var(--text-secondary)'
                             }}>
                                 {monthLabels.map((label, i) => (
                                     <div key={i} style={{
                                         position: 'absolute',
-                                        left: `${30 + label.position * 15}px`
+                                        left: `${60 + label.position * 16}px`
                                     }}>
                                         {label.month}
                                     </div>
@@ -158,7 +158,8 @@ export default function WorkoutStreak({ sessions }) {
                             </div>
 
                             {/* Heatmap grid */}
-                            <div style={{ display: 'flex', gap: '3px', overflowX: 'auto', paddingBottom: '1rem' }}>
+                            {/*<div style={{ display: 'flex', gap: '3px', overflowX: 'auto', paddingBottom: '1rem' }}>*/}
+                            <div style={{ display: 'flex', gap: '3px', paddingBottom: '1rem' }}>
                                 {/* Day labels */}
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', marginRight: '5px' }}>
                                     <div style={{ height: '12px', fontSize: '0.65rem', color: 'var(--text-secondary)' }}>Mon</div>
