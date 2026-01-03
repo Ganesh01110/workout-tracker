@@ -4,7 +4,7 @@ name: build and lint test after github push
 on:
   push:
     branches:
-      -'**'
+      - ganesh-add-workoutStreakN-exgCardN-detailsTrack
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
@@ -19,7 +19,7 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
-        
+
       - name: Build Frontend
         run: npm run build 
             
