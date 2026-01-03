@@ -1,0 +1,25 @@
+#this file is created to test the build and lint in github action after pushing the code into the github and before raising a pr
+
+name: build and lint test after github push
+on:
+  push:
+    branches:
+      -'**'
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/setup-node@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install
+        
+      - name: Build Frontend
+        run: npm run build 
+            
