@@ -105,23 +105,6 @@ export const saveSession = (session, userId = null) => {
   }
 };
 
-export const deleteSession = (id, userId = null) => {
-  try {
-    const sessions = getSessions();
-    const newSessions = sessions.filter(s => s.id !== id);
-    localStorage.setItem(LOCAL_SESSIONS_KEY, JSON.stringify(newSessions));
-
-    if (userId) {
-      const templates = getTemplates();
-      saveUserData(userId, newSessions, templates);
-    }
-
-    return newSessions;
-  } catch (error) {
-    console.error("Error deleting session", error);
-    return [];
-  }
-};
 
 export const createSession = (name, templateExercises = []) => {
   const exercises = templateExercises.map(name => ({
