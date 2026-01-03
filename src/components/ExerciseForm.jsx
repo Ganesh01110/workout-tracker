@@ -20,8 +20,25 @@ export default function ExerciseForm({ onAddExercise, initialExercise = null, on
             if (initialExercise.sets && initialExercise.sets.length > 0) {
                 setSets(initialExercise.sets);
             }
+        } else {
+            // Check for draft if not editing a specific exercise
+            const draft = localStorage.getItem('exercise_form_draft');
+            if (draft) {
+                try {
+                    const { name: draftName, sets: draftSets } = JSON.parse(draft);
+                    setName(draftName || '');
+                    if (draftSets) setSets(draftSets);
+                } catch (e) { console.error("Error loading draft", e); }
+            }
         }
     }, [initialExercise]);
+
+    // Save draft whenever name or sets change
+    useEffect(() => {
+        if (!initialExercise) {
+            localStorage.setItem('exercise_form_draft', JSON.stringify({ name, sets }));
+        }
+    }, [name, sets, initialExercise]);
 
     useEffect(() => {
         if (name) {
@@ -56,6 +73,7 @@ export default function ExerciseForm({ onAddExercise, initialExercise = null, on
 
         // Reset only if not editing a specific planned one (because that closes the form usually)
         if (!initialExercise) {
+            localStorage.removeItem('exercise_form_draft');
             setName('');
             setSets([
                 { reps: '', weight: '' },
