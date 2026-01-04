@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getWorkoutStreak, getWorkoutHeatmapData } from '../utils/storage';
 
 export default function WorkoutStreak({ sessions }) {
@@ -9,15 +9,15 @@ export default function WorkoutStreak({ sessions }) {
 
     useEffect(() => {
         loadStreakData();
-    }, [sessions]);
+    }, [sessions, viewDays, loadStreakData]);
 
-    const loadStreakData = () => {
+    const loadStreakData = useCallback(() => {
         const streak = getWorkoutStreak();
         setStreakData(streak);
 
         const heatmap = getWorkoutHeatmapData(viewDays);
         setHeatmapData(heatmap);
-    };
+    }, [viewDays]);
 
     const getColorForLevel = (level) => {
         const colors = [
