@@ -5,11 +5,9 @@ export default function WorkoutStreak({ sessions }) {
     const [streakData, setStreakData] = useState({ currentStreak: 0, longestStreak: 0, totalWorkouts: 0 });
     const [heatmapData, setHeatmapData] = useState([]);
     const [hoveredCell, setHoveredCell] = useState(null);
-    const [viewDays, setViewDays] = useState(365);
+    const viewDays = 365;
 
-    useEffect(() => {
-        loadStreakData();
-    }, [sessions, viewDays, loadStreakData]);
+
 
     const loadStreakData = useCallback(() => {
         const streak = getWorkoutStreak();
@@ -18,6 +16,11 @@ export default function WorkoutStreak({ sessions }) {
         const heatmap = getWorkoutHeatmapData(viewDays);
         setHeatmapData(heatmap);
     }, [viewDays]);
+
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        loadStreakData();
+    }, [sessions, viewDays, loadStreakData]);
 
     const getColorForLevel = (level) => {
         const colors = [

@@ -23,7 +23,10 @@ jobs:
           cache-dependency-path: ./package-lock.json
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Lint Code
+        run: npm run lint
 
       - name: Build Frontend
         run: npm run build

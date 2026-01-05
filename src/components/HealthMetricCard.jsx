@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { getHealthMetrics, saveHealthMetric, getMetricTrend, getViewRange, setViewRange } from '../utils/healthStorage';
 
@@ -16,20 +16,22 @@ export default function HealthMetricCard({
     const [viewRange, setViewRangeState] = useState(parseInt(getViewRange()));
     const [trend, setTrend] = useState({ trend: 'insufficient', label: '⚪ Insufficient Data', percentage: 0 });
 
+    const loadMetrics = useCallback(() => {
+        const data = getHealthMetrics(metricType);
+        setMetrics(data);
+    }, [metricType]);
+
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         loadMetrics();
-    }, [metricType, user]);
+    }, [metricType, user, loadMetrics]);
 
     useEffect(() => {
         // Recalculate trend when metrics or view range changes
         const trendData = getMetricTrend(metricType, viewRange === 0 ? 365 : viewRange);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setTrend(trendData);
     }, [metrics, viewRange, metricType]);
-
-    const loadMetrics = () => {
-        const data = getHealthMetrics(metricType);
-        setMetrics(data);
-    };
 
     const handleSubmit = (e) => {
         e.preventDefault();

@@ -10,6 +10,7 @@ export default function ExerciseForm({ onAddExercise, initialExercise = null, on
 
     useEffect(() => {
         if (initialExercise) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setName(initialExercise.name);
             if (initialExercise.sets && initialExercise.sets.length > 0) {
                 setSets(initialExercise.sets);
@@ -96,13 +97,13 @@ export default function ExerciseForm({ onAddExercise, initialExercise = null, on
                                     style={{ padding: '0.5rem', width: '100%' }}
                                 />
                             </div>
-                            <button 
-                                type="button" 
+                            <button
+                                type="button"
                                 onClick={() => removeSet(i)}
-                                style={{ 
-                                    background: 'transparent', 
-                                    color: '#ef4444', 
-                                    border: 'none', 
+                                style={{
+                                    background: 'transparent',
+                                    color: '#ef4444',
+                                    border: 'none',
                                     cursor: 'pointer',
                                     padding: '0.5rem',
                                     fontSize: '1.2rem',
@@ -114,15 +115,15 @@ export default function ExerciseForm({ onAddExercise, initialExercise = null, on
                             </button>
                         </div>
                     ))}
-                    <button 
-                        type="button" 
+                    <button
+                        type="button"
                         onClick={addSet}
                         className="btn-secondary"
-                        style={{ 
-                            marginTop: '0.5rem', 
-                            padding: '0.4rem', 
-                            fontSize: '0.85rem', 
-                            background: 'var(--surface-color)', 
+                        style={{
+                            marginTop: '0.5rem',
+                            padding: '0.4rem',
+                            fontSize: '0.85rem',
+                            background: 'var(--surface-color)',
                             border: '1px dashed var(--primary-color)',
                             width: '100%',
                             color: 'var(--primary-color)'

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getHealthMetrics, saveHealthMetric } from '../utils/healthStorage';
 
 export default function SupplementCard({ user }) {
@@ -6,14 +6,15 @@ export default function SupplementCard({ user }) {
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     const [entries, setEntries] = useState([{ name: '', amount: '' }]);
 
-    useEffect(() => {
-        loadSupplements();
-    }, [user]);
-
-    const loadSupplements = () => {
+    const loadSupplements = useCallback(() => {
         const data = getHealthMetrics('supplements');
         setSupplements(data);
-    };
+    }, []);
+
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        loadSupplements();
+    }, [user, loadSupplements]);
 
     const handleAddEntry = () => {
         setEntries([...entries, { name: '', amount: '' }]);

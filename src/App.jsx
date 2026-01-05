@@ -27,6 +27,16 @@ function App() {
   const [editingExerciseId, setEditingExerciseId] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
 
+  const loadData = () => {
+    const loadedSessions = getSessions();
+    setSessions(loadedSessions);
+    setTemplates(getTemplates());
+
+    const today = new Date().toDateString();
+    const todaySession = loadedSessions.find(s => new Date(s.date).toDateString() === today);
+    if (todaySession) setCurrentSession(todaySession);
+  };
+
   useEffect(() => {
     // Auth Listener
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -40,16 +50,6 @@ function App() {
     });
     return () => unsubscribe();
   }, []);
-
-  const loadData = () => {
-    const loadedSessions = getSessions();
-    setSessions(loadedSessions);
-    setTemplates(getTemplates());
-
-    const today = new Date().toDateString();
-    const todaySession = loadedSessions.find(s => new Date(s.date).toDateString() === today);
-    if (todaySession) setCurrentSession(todaySession);
-  };
 
   const startSession = (e) => {
     e.preventDefault();
