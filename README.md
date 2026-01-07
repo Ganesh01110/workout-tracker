@@ -175,6 +175,7 @@ For full details, see [SECURITY.md](./docs/SECURITY.md).
 - [Workout Streak Plan](./docs/workout_streak_feature_plan.md) - Streak feature architecture
 - [System Design](./docs/SYSTEM_DESIGN.md) - Overall system architecture
 - [Technical Documentation](./docs/TECHNICAL_DOCUMENTATION.md) - Technical specifications
+- [User Guide](./docs/USER_GUIDE.md) - User GUide
 
 ## 🧪 Testing
 
